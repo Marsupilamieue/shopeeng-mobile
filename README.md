@@ -504,3 +504,469 @@ Padding(
     ),
     ```
 
+    <hr>
+
+# Tugas 9
+
+1. Iya, tetapi menggunakan model biasanya lebih baik karena beberapa alasan:
+- Type Safety: Mendapatkan keuntungan dari sistem tipe Dart yang kuat dan mendapatkan peringatan atau kesalahan saat kompilasi jika mencoba mengakses properti yang tidak ada atau menggunakan tipe yang salah.
+- Autocompletion: IDE akan dapat memberikan saran autocompletion untuk properti model yang bisa sangat membantu dalam penulisan kode.
+- Readability and Maintainability: Model membuat kode lebih mudah dibaca dan dipelihara. Jika struktur data berubah, kita hanya perlu memperbarui model tersebut di satu tempat. 
+
+2.  Jelaskan mekanisme pengambilan data dari JSON     hingga dapat ditampilkan pada Flutter<br>           
+    Data didapat dari response url yang sudah ada pada project django, kemudian response yang didapat didecode menjadi bentuk json. Kemudian, membuat list item yang berisi Item dan json yang tadi sudah didecode diiterasi dan masing-masing item tersebut dimasukkan di list item. ```FutureBuilder``` digunakan untuk memanggil hasil dari fetch item yang kemudian ditampilkan dengan ```ListView.builder```
+
+3. Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.<br>
+    Pengguna memasukkan username dan password melalui TextField di Flutter. Data ini kemudian disimpan dalam variabel username dan password.Ketika pengguna menekan tombol login, aplikasi melakukan HTTP POST request ke endpoint ```/auth/login/``` di server Django. Data username dan password dikirimkan sebagai bagian dari body request dalam format JSON.Django menerima request dan mencoba untuk mengautentikasi pengguna. Jika autentikasi berhasil, Django akan mengirimkan respon yang berisi pesan sukses dan data pengguna. Jika autentikasi gagal, Django akan mengirimkan respon yang berisi pesan kesalahan. Flutter menerima respon dari Django dan memeriksa apakah autentikasi berhasil atau tidak. Jika berhasil, aplikasi akan menavigasi pengguna ke halaman utama (MyHomePage). Jika gagal, aplikasi akan menampilkan pesan kesalahan.Setelah pengguna berhasil login, mereka akan dibawa ke halaman utama aplikasi di mana menu aplikasi ditampilkan.
+
+4. Sebutkan seluruh widget yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.<br>
+    - Scaffold: Ini adalah widget dasar dari material design di Flutter.
+
+    - AppBar: Ini adalah bar di bagian atas aplikasi.
+
+    - Container: Ini adalah widget yang memungkinkan Anda untuk menyesuaikan child widget.
+
+    - Column: Ini adalah widget yang menampilkan child widget-nya dalam urutan vertikal.
+
+    - TextField: Ini adalah widget input teks. 
+
+    - ElevatedButton: Ini adalah widget tombol dengan elevasi.
+
+    - FutureBuilder: Ini adalah widget yang berguna untuk melakukan operasi asinkron (seperti memanggil API atau mengambil data dari database) dan memperbarui UI berdasarkan hasil operasi tersebut.
+
+    - AlertDialog: Ini adalah dialog yang muncul di atas konten saat ini. 
+
+    - SnackBar: Ini adalah pesan singkat yang muncul di bagian bawah layar.
+
+    - Navigator: Ini adalah widget yang mengelola stack widget dan memungkinkan navigasi antar halaman. 
+
+    - Drawer: Ini adalah menu samping yang dapat ditarik keluar.
+
+    - ListView.builder: Jika ada data produk, maka ListView dibuat untuk menampilkan produk-produk tersebut.
+
+5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).<br>
+
+    - Membuat halaman login pada proyek tugas Flutter.
+        ```dart
+
+        User? currentUser;
+
+        class LoginApp extends StatelessWidget {
+        const LoginApp({super.key});
+
+        @override
+        Widget build(BuildContext context) {
+            return MaterialApp(
+            title: 'Login',
+            theme: ThemeData(
+                primarySwatch: Colors.blue,
+            ),
+            home: const LoginPage(),
+            );
+        }
+        }
+
+        class User {
+        final String username;
+        final int id;
+
+        User({
+            required this.username,
+            required this.id,
+        });
+        }
+
+        User? loggedin;
+
+        class LoginPage extends StatefulWidget {
+        const LoginPage({super.key});
+
+        @override
+        _LoginPageState createState() => _LoginPageState();
+        }
+
+        class _LoginPageState extends State<LoginPage> {
+        final TextEditingController _usernameController = TextEditingController();
+        final TextEditingController _passwordController = TextEditingController();
+
+        @override
+        Widget build(BuildContext context) {
+            final request = context.watch<CookieRequest>();
+            return Scaffold(
+            appBar: AppBar(
+                title: const Text('Login'),
+                backgroundColor: Colors.orange,
+            ),
+            body: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                    TextField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                        labelText: 'Username',
+                        labelStyle: TextStyle(color: Colors.deepOrange),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepOrange),
+                        ),
+                    ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    TextField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: TextStyle(color: Colors.deepOrange),
+                        focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepOrange),
+                        ),
+                    ),
+                    obscureText: true,
+                    ),
+                    const SizedBox(height: 24.0),
+                    ElevatedButton(
+                    onPressed: () async {
+                        String username = _usernameController.text;
+                        String password = _passwordController.text;
+                        final response =
+                            await request.login("http://127.0.0.1:8000/auth/login/", {
+                        'username': username,
+                        'password': password,
+                        });
+                        // final response = await request.login(
+                        //     "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/login/", {
+                        //   'username': username,
+                        //   'password': password,
+                        // });
+
+                        if (request.loggedIn) {
+                        String message = response['message'];
+                        String uname = response['username'];
+                        int uid = response['id'];
+                        currentUser = User(username: uname, id: uid);
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyHomePage()),
+                        );
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(SnackBar(
+                                content: Text("$message Selamat datang, $uname.")));
+                        } else {
+                        // ignore: use_build_context_synchronously
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                            title: const Text('Login Gagal'),
+                            content: Text(response['message']),
+                            actions: [
+                                TextButton(
+                                child: const Text('OK'),
+                                onPressed: () {
+                                    Navigator.pop(context);
+                                },
+                                ),
+                            ],
+                            ),
+                        );
+                        }
+                    },
+                    child: const Text('Login'),
+                    ),
+                    const SizedBox(height: 12.0),
+                    ElevatedButton(
+                    onPressed: () {
+                        // Navigasi ke halaman register
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                        );
+                    },
+                    child: const Text('Register'),
+                    )
+                ],
+                ),
+            ),
+            );
+        }
+        }
+
+        ```
+        - Kode di bawah ini adalah kode ketika tombol login diclick. Isi dari field username dan password dikirimkan sebagai alat untuk autentikasi pada `http://127.0.0.1:8000/auth/login/`.
+        ```dart
+            String username = _usernameController.text;
+            String password = _passwordController.text;
+            final response =
+                await request.login("http://127.0.0.1:8000/auth/login/", {
+            'username': username,
+            'password': password,
+            });
+            // final response = await request.login(
+            //     "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/login/", {
+            //   'username': username,
+            //   'password': password,
+            // });
+
+        ```
+        - Jika data autentikasi user yang diisi benar maka request.loggedIn akan bernilai true sehingga akan masuk masuk ke block if dan masuk ke menu aplikas. Jika data yang dikrimkan tidak benar, maka aplikasi akan mengirimkan Snackbar yang bertuliskan bahwa login gagal.
+        ```dart
+        if (request.loggedIn) {
+            String message = response['message'];
+            String uname = response
+            ...
+        }else{
+            .....
+        }
+        ```
+    - Mengintegrasikan sistem autentikasi Django dengan proyek tugas Flutter.
+        
+        - Membuat django app dengan nama authentication
+        ```
+        python manage.py startapp authentication
+        ```
+        - Menambahkan app authentication ke INSTALLED_APPS di settings.py
+        - Melakukan install package
+        ```
+        pip install django-cors-headers
+        ```
+        - Menambahkan `corsheaders` ke INSTALLED_APPS di setting.py
+        - Menambahkan `corsheaders.middleware.CorsMiddleware` ke Middleware di settings.py
+
+        - Menambahkan variable terkait dengan middleware
+        ```python
+        CORS_ALLOW_ALL_ORIGINS = True
+        CORS_ALLOW_CREDENTIALS = True
+        CSRF_COOKIE_SECURE = True
+        SESSION_COOKIE_SECURE = True
+        CSRF_COOKIE_SAMESITE = 'None'
+        SESSION_COOKIE_SAMESITE = 'None'
+        ```
+        - Menambahkan method login di app authentication
+        ```python
+        @csrf_exempt
+        def login(request):
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    auth_login(request, user)
+                    return JsonResponse({
+                        "username": user.username,
+                        "id" : user.id,
+                        "status": True,
+                        "message": "Login sukses!"
+                    }, status=200)
+                else:
+                    return JsonResponse({
+                        "status": False,
+                        "message": "Login gagal, akun dinonaktifkan."
+                    }, status=401)
+
+            else:
+                return JsonResponse({
+                    "status": False,
+                    "message": "Login gagal, periksa kembali email atau kata sandi."
+                }, status=401) 
+        ```
+        - Menambahkan path di urls.py pada app authentication
+        ```python
+        path('login/', login, name='login'),
+        ```
+        - Install package untuk sistem autentikasi
+        ```
+        flutter pub add provider
+        flutter pub add pbp_django_auth
+        ```
+        - Mengubah widget build pada semua file dart dengan 
+        ```dart
+        @override
+        Widget build(BuildContext context) {
+            return Provider(
+            create: (_) {
+                CookieRequest request = CookieRequest();
+                return request;
+            },
+            child: MaterialApp(
+                title: 'Shopeeng',
+                theme: ThemeData(
+                    colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+                    useMaterial3: true,
+                ),
+                home: const LoginPage()),
+            );
+        }
+        ```
+        Perubahan ini bertujuan agar objek Provider baru yang akan membagikan instance CookieRequest dengan semua komponen yang ada di aplikasi.
+    - Membuat model kustom sesuai dengan proyek aplikasi Django.
+     
+        - Menggunakan website Quicktype untuk membuat model kostum.
+        - Menyalin json pada app yang diakses dengan `<rootaplikasi>/json` kemudian menyalinya ke website quicktype
+        - Membuat folder models
+        - Membuat file `item.dart` di dalam folder models.
+        - Menyalin hasil dari quicktype ke dalam `item.dart`
+    - Membuat halaman yang berisi daftar semua item yang terdapat pada endpoint JSON di Django yang telah kamu deploy
+        ```dart
+        class ItemPage extends StatefulWidget {
+        const ItemPage({Key? key}) : super(key: key);
+
+        @override
+        ItemPageState createState() => ItemPageState();
+        }
+
+        class ItemPageState extends State<ItemPage> {
+        Future<List<Item>> fetchItem() async {
+            var url = Uri.parse('http://127.0.0.1:8000/json/');
+            // var url = Uri.parse('http://faris-zhafir-tugas.pbp.cs.ui.ac.id/json/');
+            var response = await http.get(
+            url,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            );
+
+            // melakukan decode response menjadi bentuk json
+            var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+            // melakukan konversi data json menjadi object Item
+            List<Item> list_Item = [];
+            for (var d in data) {
+            if (d != null) {
+                // print(d.fields);
+                Item item = Item.fromJson(d);
+                if (item.fields.user == currentUser?.id) {
+                list_Item.add(Item.fromJson(d));
+                }
+            }
+            }
+            return list_Item;
+        }
+
+        @override
+        Widget build(BuildContext context) {
+            return Scaffold(
+                appBar: AppBar(
+                title: const Text('Item'),
+                backgroundColor: Colors.orange,
+                ),
+                drawer: const LeftDrawer(),
+                body: FutureBuilder(
+                    future: fetchItem(),
+                    builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.data == null) {
+                        return const Center(child: CircularProgressIndicator());
+                    } else {
+                        if (!snapshot.hasData) {
+                        return const Column(
+                            children: [
+                            Text(
+                                "Tidak ada data item.",
+                                style:
+                                    TextStyle(color: Color(0xff59A5D8), fontSize: 20),
+                            ),
+                            SizedBox(height: 8),
+                            ],
+                        );
+                        } else {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (_, index) => InkWell(
+                            onTap: () {
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailItemPage(item: snapshot.data![index]),
+                                ),
+                                );
+                            },
+                            child: Card(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    Text(
+                                        "${snapshot.data![index].fields.name}",
+                                        style: const TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                        ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                        "Harga : ${snapshot.data![index].fields.price}"),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                        "Tentang : ${snapshot.data![index].fields.description}")
+                                    ],
+                                ),
+                                ),
+                            ),
+                            ),
+                        );
+                        }
+                    }
+                    }));
+        }
+        }
+
+        ```
+        - Method `fetchItem()` digunakan untuk mengambil item dari endpoint `.../json/` yang kemudian didecode menjadi json dan dimasukkan ke dalam `item_list`
+        - `FutureBuilder` berguna untuk melakukan operasi asinkron dan memperbarui UI berdasarkan hasil operasi tersebut. `fetchProduct()` dipanggil untuk mengambil data produk.
+        - `snapshot.data == null` Jika data dari fetchProduct() masih null, maka akan menampilkan CircularProgressIndicator()
+        - `snapshot.hasData` Jika fetchProduct() selesai dan tidak ada data yang dikembalikan, maka pesan “Tidak ada data produk.” ditampilkan.
+        - `ListView.builder` Jika ada data produk, maka ListView dibuat untuk menampilkan produk-produk tersebut. Setiap produk ditampilkan dalam Container dengan beberapa Text widget untuk menampilkan nama, harga, dan deskripsi produk.
+        - Kode di bawah berguna ketika item diclick, maka aplikasi akan menampilkan detail item tersebut
+        ```dart
+        onTap: () {
+            Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    DetailItemPage(item: snapshot.data![index]),
+            ),
+            );
+        },
+        ```
+    - Membuat halaman detail untuk setiap item yang terdapat pada halaman daftar Item.
+        ```dart
+        class DetailItemPage extends StatelessWidget {
+        final Item item;
+
+        DetailItemPage({required this.item});
+
+        @override
+        Widget build(BuildContext context) {
+            return Scaffold(
+            appBar: AppBar(
+                title: Text(item.fields.name),
+            ),
+            body: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                    Text(
+                    item.fields.name,
+                    style: Theme.of(context).textTheme.headline6,
+                    ),
+                    const SizedBox(height: 10),
+                    Text("Harga : ${item.fields.price}"),
+                    const SizedBox(height: 10),
+                    Text("Jumlah : ${item.fields.amount}"),
+                    const SizedBox(height: 10),
+                    Text("Tentang : ${item.fields.description}"),
+                ],
+                ),
+            ),
+            );
+        }
+        }
+        ```
