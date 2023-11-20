@@ -101,17 +101,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   return;
                 }
 
-                final response =
-                    await request.post("http://127.0.0.1:8000/auth/register/", {
-                  'username': username,
-                  'password': password,
-                });
-                // final response = await request.post(
-                //     "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/register/",
-                //     {
-                //       'username': username,
-                //       'password': password,
-                //     });
+                // final response =
+                //     await request.post("http://127.0.0.1:8000/auth/register/", {
+                //   'username': username,
+                //   'password': password,
+                // });
+                final response = await request.post(
+                    "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/register/",
+                    {
+                      'username': username,
+                      'password': password,
+                    });
 
                 if (response['status']) {
                   String message = response['message'];

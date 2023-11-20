@@ -28,7 +28,7 @@ class LoginApp extends StatelessWidget {
 
 class User {
   final String username;
-  final int id;
+  int id = 0;
 
   User({
     required this.username,
@@ -89,16 +89,16 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () async {
                 String username = _usernameController.text;
                 String password = _passwordController.text;
-                final response =
-                    await request.login("http://127.0.0.1:8000/auth/login/", {
-                  'username': username,
-                  'password': password,
-                });
-                // final response = await request.login(
-                //     "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/login/", {
+                // final response =
+                //     await request.login("http://127.0.0.1:8000/auth/login/", {
                 //   'username': username,
                 //   'password': password,
                 // });
+                final response = await request.login(
+                    "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/login/", {
+                  'username': username,
+                  'password': password,
+                });
 
                 if (request.loggedIn) {
                   String message = response['message'];

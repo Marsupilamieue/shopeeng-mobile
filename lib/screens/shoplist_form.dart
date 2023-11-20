@@ -7,6 +7,8 @@ import 'package:shopeeng/screens/menu.dart';
 import 'package:shopeeng/widgets/left_drawer.dart';
 import 'package:shopeeng/widgets/shop_card.dart';
 
+import 'package:shopeeng/screens/login.dart';
+
 class ShopFormPage extends StatefulWidget {
   const ShopFormPage({super.key});
 
@@ -149,22 +151,24 @@ class _ShopFormPageState extends State<ShopFormPage> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       // Kirim ke Django dan tunggu respons
+                      final response = await request.postJson(
+                          "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/create-flutter/",
+                          jsonEncode(<String, String>{
+                            'user': currentUser!.id.toString(),
+                            'name': _name,
+                            'price': _price.toString(),
+                            'description': _description,
+                            'amount': _amount.toString(),
+                          }));
+                      // print(response.body);
                       // final response = await request.postJson(
-                      //     "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/create-flutter/",
+                      //     "http://127.0.0.1:8000/create-flutter/",
                       //     jsonEncode(<String, String>{
                       //       'name': _name,
                       //       'price': _price.toString(),
                       //       'description': _description,
                       //       'amount': _amount.toString(),
                       //     }));
-                      final response = await request.postJson(
-                          "http://127.0.0.1:8000/create-flutter/",
-                          jsonEncode(<String, String>{
-                            'name': _name,
-                            'price': _price.toString(),
-                            'description': _description,
-                            'amount': _amount.toString(),
-                          }));
                       if (response['status'] == 'success') {
                         // ignore: use_build_context_synchronously
                         ScaffoldMessenger.of(context)
