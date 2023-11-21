@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 //   'password': password,
                 // });
                 final response = await request.login(
-                    "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/login/", {
+                    "https://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/login/", {
                   'username': username,
                   'password': password,
                 });

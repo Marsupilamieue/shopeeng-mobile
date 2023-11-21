@@ -107,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 //   'password': password,
                 // });
                 final response = await request.post(
-                    "http://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/register/",
+                    "https://faris-zhafir-tugas.pbp.cs.ui.ac.id/auth/register/",
                     {
                       'username': username,
                       'password': password,
