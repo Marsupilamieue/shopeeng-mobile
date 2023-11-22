@@ -509,17 +509,21 @@ Padding(
 # Tugas 9
 
 1. Iya, tetapi menggunakan model biasanya lebih baik karena beberapa alasan:
-- Type Safety: Mendapatkan keuntungan dari sistem tipe Dart yang kuat dan mendapatkan peringatan atau kesalahan saat kompilasi jika mencoba mengakses properti yang tidak ada atau menggunakan tipe yang salah.
-- Autocompletion: IDE akan dapat memberikan saran autocompletion untuk properti model yang bisa sangat membantu dalam penulisan kode.
-- Readability and Maintainability: Model membuat kode lebih mudah dibaca dan dipelihara. Jika struktur data berubah, kita hanya perlu memperbarui model tersebut di satu tempat. 
+    - Type Safety: Mendapatkan keuntungan dari sistem tipe Dart yang kuat dan mendapatkan peringatan atau kesalahan saat kompilasi jika mencoba mengakses properti yang tidak ada atau menggunakan tipe yang salah.
+    - Autocompletion: IDE akan dapat memberikan saran autocompletion untuk properti model yang bisa sangat membantu dalam penulisan kode.
+    - Readability and Maintainability: Model membuat kode lebih mudah dibaca dan dipelihara. Jika struktur data berubah, kita hanya perlu memperbarui model tersebut di satu tempat. 
 
-2.  Jelaskan mekanisme pengambilan data dari JSON     hingga dapat ditampilkan pada Flutter<br>           
+2.  Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+    Fungsi cookie request adalah untuk mendapatkkan data di flutter
+    Kenapa digunakan? untuk menyimpan data sementara atau cache data dan toke authentication
+
+3.  Jelaskan mekanisme pengambilan data dari JSON     hingga dapat ditampilkan pada Flutter<br>           
     Data didapat dari response url yang sudah ada pada project django, kemudian response yang didapat didecode menjadi bentuk json. Kemudian, membuat list item yang berisi Item dan json yang tadi sudah didecode diiterasi dan masing-masing item tersebut dimasukkan di list item. ```FutureBuilder``` digunakan untuk memanggil hasil dari fetch item yang kemudian ditampilkan dengan ```ListView.builder```
 
-3. Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.<br>
+4. Jelaskan mekanisme autentikasi dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.<br>
     Pengguna memasukkan username dan password melalui TextField di Flutter. Data ini kemudian disimpan dalam variabel username dan password.Ketika pengguna menekan tombol login, aplikasi melakukan HTTP POST request ke endpoint ```/auth/login/``` di server Django. Data username dan password dikirimkan sebagai bagian dari body request dalam format JSON.Django menerima request dan mencoba untuk mengautentikasi pengguna. Jika autentikasi berhasil, Django akan mengirimkan respon yang berisi pesan sukses dan data pengguna. Jika autentikasi gagal, Django akan mengirimkan respon yang berisi pesan kesalahan. Flutter menerima respon dari Django dan memeriksa apakah autentikasi berhasil atau tidak. Jika berhasil, aplikasi akan menavigasi pengguna ke halaman utama (MyHomePage). Jika gagal, aplikasi akan menampilkan pesan kesalahan.Setelah pengguna berhasil login, mereka akan dibawa ke halaman utama aplikasi di mana menu aplikasi ditampilkan.
 
-4. Sebutkan seluruh widget yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.<br>
+5. Sebutkan seluruh widget yang kamu pakai pada tugas ini dan jelaskan fungsinya masing-masing.<br>
     - Scaffold: Ini adalah widget dasar dari material design di Flutter.
 
     - AppBar: Ini adalah bar di bagian atas aplikasi.
@@ -544,7 +548,7 @@ Padding(
 
     - ListView.builder: Jika ada data produk, maka ListView dibuat untuk menampilkan produk-produk tersebut.
 
-5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).<br>
+6. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).<br>
 
     - Membuat halaman login pada proyek tugas Flutter.
         ```dart
